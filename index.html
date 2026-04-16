@@ -9,11 +9,11 @@
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;--accent:#4f7cff;--accent2:#ff6b6b;--green:#3dd68c;--yellow:#ffd166;--orange:#ff9a3c;--purple:#a78bfa;--teal:#22d3ee;--text:#e8eaf6;--muted:#7880a0;--font-d:"Bebas Neue",sans-serif;--font-b:"Golos Text",sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font-b);background:var(--bg);color:var(--text);min-height:100vh;}
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-.login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;width:100%;max-width:380px;}
-.login-title{font-family:var(--font-d);font-size:32px;letter-spacing:2px;color:var(--accent);margin-bottom:6px;}
-.login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
-.login-err{color:var(--accent2);font-size:13px;margin-top:10px;display:none;}
+
+
+
+
+
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;gap:10px;height:54px;position:sticky;top:0;z-index:200;flex-wrap:wrap;}
 .header-title{font-family:var(--font-d);font-size:20px;letter-spacing:2px;color:var(--accent);flex-shrink:0;}
 .branch-tabs{display:flex;gap:4px;overflow-x:auto;flex:1;}
@@ -138,18 +138,9 @@ tbody tr:hover{background:var(--surface2);}
 </head>
 <body>
 
-<div class="login-wrap" id="login-wrap">
-  <div class="login-card">
-    <div class="login-title">ЖУРНАЛ УЧЁТА</div>
-    <div class="login-sub">Войдите чтобы продолжить</div>
-    <div class="fg"><label>Логин</label><input type="text" id="l-login" placeholder="Введите логин" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div class="fg"><label>Пароль</label><input type="password" id="l-pass" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <button class="btn-primary" onclick="selectAdmin()">ВОЙТИ</button>
-    <div class="login-err" id="login-err"></div>
-  </div>
-</div>
 
-<div id="app" style="display:none">
+
+<div id="app">
   <div class="header">
     <div class="header-title">ЖУРНАЛ</div>
     <div class="branch-tabs" id="branch-tabs"></div>
@@ -319,29 +310,21 @@ function saveProfiles(p,b){localStorage.setItem("prf_"+(b||curBranch),JSON.strin
 function getMonths(){return[...new Set(loadData().map(r=>r.date.slice(0,7)))].sort().reverse();}
 function fillMonths(id,lbl){var s=document.getElementById(id),c=s.value;s.innerHTML="<option value=''>"+lbl+"</option>";getMonths().forEach(m=>{var o=document.createElement("option");o.value=m;o.textContent=fmtMonth(m);s.appendChild(o);});s.value=c;}
 
-function doLogin(){
-  var login=document.getElementById("l-login").value.trim().toLowerCase();
-  var pass=document.getElementById("l-pass").value;
-  var err=document.getElementById("login-err");
-  err.style.display="none";
-  var u=USERS[login];
-  if(!u||u.pass!==pass){err.textContent="Неверный логин или пароль";err.style.display="block";return;}
-  curUser={login:login,role:u.role,name:u.name,branches:u.branches};
-  localStorage.setItem("jrn_session",JSON.stringify({login:login}));
+function selectPoint(point){
+  var map={"admin":["Склад","Пушкина 7","Омарова 12В","Бокейхана 25"],"pushkin":["Пушкина 7"],"omarova":["Омарова 12В"],"bokey":["Бокейхана 25"]};
+  var names={"admin":"Администратор","pushkin":"Пушкина 7","omarova":"Омарова 12В","bokey":"Бокейхана 25"};
+  var roles={"admin":"admin","pushkin":"senior","omarova":"senior","bokey":"senior"};
+  curUser={login:point,role:roles[point],name:names[point],branches:map[point]};
+  localStorage.setItem("jrn_session",JSON.stringify({point:point}));
   startApp();
 }
 
 function doLogout(){
   curUser=null;curBranch=null;
-  localStorage.removeItem("jrn_session");
-  document.getElementById("app").style.display="none";
-  document.getElementById("login-wrap").style.display="flex";
-  document.getElementById("l-pass").value="";
+  location.reload();
 }
 
 function startApp(){
-  document.getElementById("login-wrap").style.display="none";
-  document.getElementById("app").style.display="block";
   document.getElementById("user-badge").textContent=curUser.name;
   if(curUser.role==="admin") document.getElementById("tab-settings").style.display="";
   else document.getElementById("tab-settings").style.display="none";
@@ -665,11 +648,15 @@ document.getElementById("modal").addEventListener("click",function(e){if(e.targe
   if(sess){
     try{
       var s=JSON.parse(sess);
-      var u=USERS[s.login];
-      if(u){curUser={login:s.login,role:u.role,name:u.name,branches:u.branches};startApp();}
+      if(s.point){selectPoint(s.point);return;}
     }catch(e){}
   }
+  // Add button listeners
+  document.getElementById("btn-admin").addEventListener("click",function(){selectPoint("admin");});
+  document.getElementById("btn-pushkin").addEventListener("click",function(){selectPoint("pushkin");});
+  document.getElementById("btn-omarova").addEventListener("click",function(){selectPoint("omarova");});
+  document.getElementById("btn-bokey").addEventListener("click",function(){selectPoint("bokey");});
 })();
-function selectAdmin(){curUser={login:"admin",role:"admin",name:"Администратор",branches:["Склад","Пушкина 7","Омарова 12В","Бокейхана 25"]};startApp();}</script>
+</script>
 </body>
 </html>
