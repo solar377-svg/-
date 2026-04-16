@@ -144,7 +144,7 @@ tbody tr:hover{background:var(--surface2);}
     <div class="login-sub">Войдите чтобы продолжить</div>
     <div class="fg"><label>Логин</label><input type="text" id="l-login" placeholder="Введите логин" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="fg"><label>Пароль</label><input type="password" id="l-pass" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <button class="btn-primary" onclick="doLogin()">ВОЙТИ</button>
+    <button class="btn-primary" onclick="selectAdmin()">ВОЙТИ</button>
     <div class="login-err" id="login-err"></div>
   </div>
 </div>
@@ -670,6 +670,6 @@ document.getElementById("modal").addEventListener("click",function(e){if(e.targe
     }catch(e){}
   }
 })();
-</script>
+function selectAdmin(){curUser={login:"admin",role:"admin",name:"Администратор",branches:["Склад","Пушкина 7","Омарова 12В","Бокейхана 25"]};startApp();}</script>
 </body>
 </html>
