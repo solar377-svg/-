@@ -26,8 +26,8 @@ function saveDB(db) {
 function getDefaultDB() {
   return {
     users: {
-      olya:    {pass: 'Sklad2024!', role: 'admin',  name: 'Оля',          branches: ['Склад','Пушкина 7','Омарова 12В','Бокейхана 25']},
-      chef:    {pass: 'Boss2024!',  role: 'admin',  name: 'Шеф',          branches: ['Склад','Пушкина 7','Омарова 12В','Бокейхана 25']},
+      olya:    {pass: 'Sklad2024!', role: 'admin',  name: 'Ольга',          branches: ['Склад','Пушкина 7','Омарова 12В','Бокейхана 25']},
+      chef:    {pass: 'Boss2024!',  role: 'admin',  name: 'Илья',          branches: ['Склад','Пушкина 7','Омарова 12В','Бокейхана 25']},
       pushkin: {pass: 'Push2024!',  role: 'senior', name: 'Пушкина 7',    branches: ['Пушкина 7']},
       omarova: {pass: 'Omar2024!',  role: 'senior', name: 'Омарова 12В',  branches: ['Омарова 12В']},
       bokey:   {pass: 'Bokey2024!', role: 'senior', name: 'Бокейхана 25', branches: ['Бокейхана 25']},
